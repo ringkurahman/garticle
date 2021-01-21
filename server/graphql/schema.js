@@ -29,6 +29,7 @@ const typeDefs = gql`
         updated_at: String
         author: User!
         category: Category!
+        related(sort:SortInput): [Post!]
     }
 
     type User {
@@ -40,7 +41,7 @@ const typeDefs = gql`
         role: String
         token: String
         createdAt: String
-        posts: [Post!]!
+        posts(sort:SortInput): [Post!]!
         categories: [Category!]!
     }
 
