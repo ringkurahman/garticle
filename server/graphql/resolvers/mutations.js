@@ -1,5 +1,6 @@
-const { User } = require('../../models/User')
 const { UserInputError, AuthenticationError, ApolloError } = require('apollo-server-express')
+const { User } = require('../../models/User')
+const { Post } = require('../../models/Post')
 const authorize = require('../../middleware/isAuth')
 const  { userOwnership } = require('../../middleware/userOwnerShip')
 
@@ -122,6 +123,39 @@ module.exports = {
 
             } catch (err) {
                 throw new AuthenticationError('Something went wrong1, please try again', err)
+            }
+        },
+        createPost: async(parent,{ fields },context,info)=> {
+            try {
+                const req = authorize(context.req)
+                /// validate...
+                const post = new Post({
+                    title: fields.title,
+                    excerpt:fields.excerpt,
+                    content:fields.content,
+                    author: req._id,
+                    status: fields.status
+                })
+
+                const result = await post.save()
+
+                return { ...result._doc }
+
+            } catch (err) {
+                // Mongoose duplicate key
+                if (err.code === 11000) {
+                    throw new AuthenticationError('Duplicate field value entered')
+                }
+                // Mongoose bad ObjectId
+                if (err.name === 'CastError') {
+                    throw new AuthenticationError(`Resource not found`)
+                }
+                // Mongoose validation error
+                if (err.name === 'ValidationError') {
+                    const message = Object.values(err.errors).map(val => val.message)
+                    throw new AuthenticationError(message)
+                }
+                throw err                
             }
         }
     }
