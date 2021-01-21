@@ -8,6 +8,8 @@ const typeDefs = gql`
     }
 
     type Mutation {
+        updateUserEmailPass(_id:ID!, email: String!, password: String): User!
+        updateUserProfile(_id:ID!, fields:ProfileInput): User!
         authUser(fields:AuthInput!): User!
         signup(fields:AuthInput!): User!
     }
@@ -21,6 +23,12 @@ const typeDefs = gql`
         role: String
         token: String
         createdAt: String
+    }
+
+    input ProfileInput {
+        firstname:String, 
+        lastname:String,
+        role: String
     }
 
     input AuthInput {

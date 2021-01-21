@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
+const SALT_I = 10
 
 
 
@@ -46,36 +47,44 @@ const UserSchema = new mongoose.Schema({
 
 
 // Encrypt password using bcrypt
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', function(next){
     let user = this
-    if (!user.isModified('password')) {
+
+    if(user.isModified('password')){
+        bcrypt.genSalt(SALT_I, function(err, salt){
+            if(err) return next(err)
+
+            bcrypt.hash(user.password, salt, function(err, hash){
+                if(err) return next(err)
+                user.password = hash
+                next()
+            })
+        })
+    } else{
         next()
     }
-    
-    const salt = await bcrypt.genSalt(10)
-    user.password = await bcrypt.hash(user.password, salt)
 })
 
 
-// Sign JWT and return
-UserSchema.methods.getSignedJwtToken = function () {
-    
+// Sign JWT and save user into database
+UserSchema.methods.getSignedJwtToken = async function(){
     let user = this
-    let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE
+
+    let token = jwt.sign({ _id:user._id, email:user.email }, process.env.JWT_SECRET,{
+        expiresIn:'7d'
     })
 
     user.token = token
-    return user.save()   
+    return user.save()
 }
 
 
 // Match user entered password to hashed password in database
-UserSchema.methods.matchPassword = async function (enteredPassword) {
-    let user = this
-    return await bcrypt.compare(enteredPassword, user.password)
+UserSchema.methods.matchPassword = function(candidatePassword){
+    var user = this
+    return bcrypt.compare(candidatePassword, user.password)
         .then(function (result) {
-            return result
+        return result
     })
 }
 

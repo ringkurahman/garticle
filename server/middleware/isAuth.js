@@ -4,10 +4,10 @@ const { AuthenticationError } = require('apollo-server-express')
 
 
 
+
 const throwAuthError = () => {
     throw new AuthenticationError('You are not auth')
 }
-
 
 
 
@@ -36,6 +36,7 @@ const authorize = (req, verify = false) => {
 
         req.isAuth = true
         req._id = decodedJWT._id
+        req.email = decodedJWT.email
         req.token = token
 
         return req
@@ -45,5 +46,7 @@ const authorize = (req, verify = false) => {
         return !verify ? throwAuthError() : req
     }
 }
+
+
 
 module.exports = authorize

@@ -1,5 +1,8 @@
 const { User } = require('../../models/User')
 const { UserInputError, AuthenticationError, ApolloError } = require('apollo-server-express')
+const authorize = require('../../middleware/isAuth')
+const  { userOwnership } = require('../../middleware/userOwnerShip')
+
 
 
 module.exports = {
@@ -68,6 +71,57 @@ module.exports = {
                 }
 
                 throw err
+            }
+        },
+        updateUserProfile: async (parent, args, context, info) => {
+            try {
+                const req = authorize(context.req)
+
+                if (!userOwnership(req, args._id)) {
+                    throw new AuthenticationError("You don't own this user")
+                }
+
+                const user = await User.findOneAndUpdate({_id:args._id}, { "$set":{
+                            firstname: args.fields.firstname,
+                            lastname: args.fields.lastname,
+                            role: args.fields.role
+                        }
+                    }, {
+                        new: true,
+                        runValidators: true
+                    }
+                )
+
+                return {...user._doc}
+
+            } catch (err) {
+                throw err
+            }
+        },
+        updateUserEmailPass: async (parent, args, context, info) => {
+            try {
+                const req = authorize(context.req)
+
+                if(!userOwnership(req, args._id))
+                throw new AuthenticationError("You don't own this user")
+
+                const user =await User.findOne({ _id:req._id })
+                if(!user) throw new AuthenticationError("Sorry, try again")
+
+                // Validate fields
+                if(args.email){ user.email = args.email }
+                if(args.password){ user.password = args.password }
+
+                // USER IS RIGHT, GENERATE TOKEN
+                const getToken = await user.getSignedJwtToken()
+                if(!getToken) { 
+                    throw new AuthenticationError('Something went wrong, try again')
+                }
+
+                return { ...getToken._doc, token:getToken.token}
+
+            } catch (err) {
+                throw new AuthenticationError('Something went wrong1, please try again', err)
             }
         }
     }
