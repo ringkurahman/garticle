@@ -1,6 +1,7 @@
 const { UserInputError, AuthenticationError, ApolloError } = require('apollo-server-express')
 const { User } = require('../../models/User')
 const { Post } = require('../../models/Post')
+const { Category } = require('../../models/Category')
 const authorize = require('../../middleware/isAuth')
 const  { userOwnership } = require('../../middleware/userOwnerShip')
 
@@ -125,7 +126,7 @@ module.exports = {
                 throw new AuthenticationError('Something went wrong1, please try again', err)
             }
         },
-        createPost: async(parent,{ fields },context,info)=> {
+        createPost: async(parent, { fields }, context, info)=> {
             try {
                 const req = authorize(context.req)
                 /// validate...
@@ -141,6 +142,36 @@ module.exports = {
 
                 return { ...result._doc }
 
+            } catch (err) {
+                // Mongoose duplicate key
+                if (err.code === 11000) {
+                    throw new AuthenticationError('Duplicate field value entered')
+                }
+                // Mongoose bad ObjectId
+                if (err.name === 'CastError') {
+                    throw new AuthenticationError(`Resource not found`)
+                }
+                // Mongoose validation error
+                if (err.name === 'ValidationError') {
+                    const message = Object.values(err.errors).map(val => val.message)
+                    throw new AuthenticationError(message)
+                }
+                throw err                
+            }
+        },
+        createCategory:  async(parent, args, context, info)=> {
+            try {
+                const req = authorize(context.req)
+                // validate
+                const category = new Category({
+                    author: req._id,
+                    name: args.name
+                })
+
+                const result = await category.save()
+
+                return { ...result._doc }
+                
             } catch (err) {
                 // Mongoose duplicate key
                 if (err.code === 11000) {

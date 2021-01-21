@@ -13,6 +13,7 @@ const typeDefs = gql`
         authUser(fields:AuthInput!): User!
         signup(fields:AuthInput!): User!
         createPost(fields:PostInput!): Post!
+        createCategory(name:String!): Category!
     }
 
     type Post {
@@ -24,6 +25,13 @@ const typeDefs = gql`
         updated_at: String
         author: User!
         status: PostStatus
+    }
+
+    type Category { 
+        _id: ID!
+        name: String!
+        author: User!
+        posts: [Post]
     }
 
     type User {
