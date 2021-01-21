@@ -1,6 +1,8 @@
 const { AuthenticationError } = require('apollo-server-express')
 const { User } = require('../../models/User')
+const { Category } = require('../../models/Category')
 const authorize = require('../../middleware/isAuth')
+
 
 
 
@@ -33,6 +35,21 @@ module.exports = {
                 return { _id, firstname, lastname, email, role, token } = req
                 
             }catch(err){
+                throw err
+            }
+        },
+        categories: async (parent,{ catId }, context, info) => {
+            try {
+                let catQuery = {}
+
+                if (catId) {
+                    catQuery['_id'] = catId
+                }
+
+                const categories = await Category.find(catQuery)
+                return categories
+
+            } catch (err) {
                 throw err
             }
         }

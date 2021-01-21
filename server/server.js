@@ -14,6 +14,10 @@ connectDB()
 const typeDefs = require('./graphql/schema')
 const { Query } = require('./graphql/resolvers/query')
 const { Mutation } = require('./graphql/resolvers/mutations')
+const { User } = require('./graphql/resolvers/user')
+const { Post } = require('./graphql/resolvers/post')
+const { Category } = require('./graphql/resolvers/category')
+
 
 const app = express()
 
@@ -26,11 +30,14 @@ const server = new ApolloServer({
     typeDefs,
     resolvers:{
         Query,
-        Mutation
+        Mutation,
+        User,
+        Post,
+        Category
     },
     context:({ req })=>{
         
-        req.headers.authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDA5YTkyM2ExYjY2ZDQxNDBmNTc0ZDkiLCJlbWFpbCI6InJpbmdrdTEwMTIxQGdtYWlsLmNvbSIsImlhdCI6MTYxMTI0NTg1OSwiZXhwIjoxNjExODUwNjU5fQ._sp6k-rgEkVZoL5OVw9bFkvTF0UAd7t1Q-VnrsfVGeE'
+        req.headers.authorization = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MDA5ZDNiZjY0YTY5YzMwOThiYjNlMjYiLCJlbWFpbCI6InJpbmdrdTEwMTIxQGdtYWlsLmNvbSIsImlhdCI6MTYxMTI1Njc4NywiZXhwIjoxNjExODYxNTg3fQ.YJql6FgIPLZ22tAkdINX8cCS04YVEn-j109Lik73Jso'
 
         return {req}
     }
