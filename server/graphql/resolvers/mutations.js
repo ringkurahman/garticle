@@ -160,6 +160,51 @@ module.exports = {
                 throw err                
             }
         },
+        updatePost: async (parent, { _id, fields}, context, info) => {
+            try {
+                const req = authorize(context.req)
+
+                const post = await Post.findOne({ _id: _id })
+                // Throw 
+
+                if (!userOwnership(req, post.author)) {
+                    throw new AuthenticationError("Not authorized to update")
+                }
+
+                // if (post.title != fields.title) {
+                //     post.title = fields.title
+                // }
+
+                for (key in fields) {
+                    if (post[key] != fields[key]) {
+                        post[key] = fields[key]
+                    }
+                }
+
+                const result = await post.save()
+
+                return { ...result._doc }
+
+            } catch (err) {
+                throw err
+            }
+        },
+        deletePost: async (parent, { _id }, context, info) => {
+            try {
+                const req = authorize(context.req)
+
+                const post = await Post.findByIdAndRemove(_id)
+
+                if (!post) {
+                    throw new AuthenticationError("Sorry, not able to find your post")
+                }
+
+                return post
+
+            } catch (err) {
+                throw err
+            }
+        },
         createCategory:  async(parent, args, context, info)=> {
             try {
                 const req = authorize(context.req)
