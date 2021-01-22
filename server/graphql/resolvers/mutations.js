@@ -205,7 +205,7 @@ module.exports = {
                 throw err
             }
         },
-        createCategory:  async(parent, args, context, info)=> {
+        createCategory: async(parent, args, context, info)=> {
             try {
                 const req = authorize(context.req)
                 // validate
@@ -233,6 +233,42 @@ module.exports = {
                     throw new AuthenticationError(message)
                 }
                 throw err                
+            }
+        },
+        updateCategory: async (parent,{ _id, name }, context, info) => {
+            try {
+                const req = authorize(context.req)
+
+                const category = await Category.findOneAndUpdate(
+                    { _id: _id },
+                    {
+                        "$set":{
+                            name
+                        }
+                    },
+                    { new: true}
+                )
+
+                return { ...category._doc }
+
+            } catch (err) {
+                throw err
+            }
+        },
+        deleteCategory: async(parent,{ _id },context,info)=> { 
+            try {
+                const req = authorize(context.req)
+
+                const category = await Category.findByIdAndRemove(_id)
+
+                if (!category) {
+                    throw new UserInputError('Sorry, not able to find your category or it was deleted already')
+                }
+               
+                return category
+
+            } catch( err ) {
+                throw err
             }
         }
     }
