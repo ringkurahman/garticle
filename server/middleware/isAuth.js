@@ -36,7 +36,10 @@ const authorize = (req, verify = false) => {
 
         req.isAuth = true
         req._id = decodedJWT._id
+        req.firstname = decodedJWT.firstname
+        req.lastname = decodedJWT.lastname
         req.email = decodedJWT.email
+        req.role = decodedJWT.role
         req.token = token
 
         return req

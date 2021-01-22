@@ -15,4 +15,21 @@ export const loginUser = (userData) => ({
 })
 
 
+export const autoSign = () => ({
+    type:AUTH_USER,
+    payload: api.autoSign()
+})
+
+
+export const logoutUser = () => {
+
+    localStorage.removeItem('X-AUTH')
+    
+    return {
+        type: AUTH_USER,
+        payload: { auth: null }
+    }
+}
+
+
 

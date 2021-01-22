@@ -67,3 +67,31 @@ export const loginUser = async (userData) => {
         console.log(err)
     }
 }
+
+
+export const autoSign = async()=>{
+    try{
+        const { data } = await axios({
+            data:{
+                query: `query{ 
+                    isAuth{ 
+                        _id 
+                        firstname
+                        lastname
+                        email
+                        role 
+                        token
+                    }
+                }`
+            }
+        })
+
+        if (data.errors) localStorage.removeItem('X-AUTH')
+        
+        return {
+            auth: data.data ? data.data.isAuth : null
+        }
+    } catch(err){
+        console.log(err)
+    }
+}
