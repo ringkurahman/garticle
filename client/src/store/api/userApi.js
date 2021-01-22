@@ -2,6 +2,7 @@ import axios from 'axios'
 
 axios.defaults.baseURL = '/graphql'
 axios.defaults.method = 'POST'
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('X-AUTH')
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 
@@ -27,7 +28,7 @@ export const signupUser = async (userData) => {
         })
         return {
             auth: data.data ? data.data.signup : null,
-            error: data.errors
+            errors: data.errors
         }
 
     } catch (err) {
