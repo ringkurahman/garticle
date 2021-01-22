@@ -8,7 +8,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
 import { useDispatch } from 'react-redux'
-import { signupUser } from '../store/actions/userAction'
+import { signupUser, loginUser } from '../store/actions/userAction'
 
 
 const Login = (props) => {
@@ -42,6 +42,10 @@ const Login = (props) => {
     const onSubmitHandler = (values) => {
         if(type){
             // sign in
+            dispatch(loginUser(values))
+                .then(({ payload }) => {
+                    successHandler(payload)
+                })
         } else {
             // register
             dispatch(signupUser(values))
