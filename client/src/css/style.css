@@ -1,0 +1,118 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    color: #2996f3; 
+}
+
+.bg-custom {
+    background-color: #2196F3!important;
+    border-bottom: 1px solid #ffffff;
+}
+.bg-custom-small{
+    background-color: #6f6f6f!important;
+    border-bottom: 5px solid #5d5d5d;
+    padding: 0px 1rem;
+}
+
+.bg-custom .navbar-brand {
+    font-family: 'Dancing Script', cursive;
+}
+
+/* LOADER */
+.lds-heart {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    transform: rotate(45deg);
+    transform-origin: 40px 40px;
+  }
+  .lds-heart div {
+    top: 32px;
+    left: 32px;
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: #2996f3;
+    animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  .lds-heart div:after,
+  .lds-heart div:before {
+    content: " ";
+    position: absolute;
+    display: block;
+    width: 32px;
+    height: 32px;
+    background: #2996f3;
+  }
+  .lds-heart div:before {
+    left: -24px;
+    border-radius: 50% 0 0 50%;
+  }
+  .lds-heart div:after {
+    top: -24px;
+    border-radius: 50% 50% 0 0;
+  }
+  @keyframes lds-heart {
+    0% {
+      transform: scale(0.95);
+    }
+    5% {
+      transform: scale(1.1);
+    }
+    39% {
+      transform: scale(0.85);
+    }
+    45% {
+      transform: scale(1);
+    }
+    60% {
+      transform: scale(0.95);
+    }
+    100% {
+      transform: scale(0.9);
+    }
+  }
+  
+
+.yell {
+  background: #ffffc4;
+  text-align: center;
+  cursor: pointer;
+}
+
+.green {
+  background: #a5ffa9;
+    text-align: center;
+    cursor: pointer;
+}
+
+.remove_btn {
+  text-align: center;
+  background: #f69a9a;
+  color: #fff;
+  cursor: pointer;
+}
+
+.remove_btn:hover {
+  background:#ff6161
+}
+
+.my-masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: -30px; /* gutter size offset */
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 30px; /* gutter size */
+  background-clip: padding-box;
+}
+ 
+/* Style your items */
+.my-masonry-grid_column > div { /* change div to reference your elements you put in <Masonry> */
+  margin-bottom: 30px;
+}
