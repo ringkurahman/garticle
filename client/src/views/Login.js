@@ -6,6 +6,7 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 
 import { useDispatch } from 'react-redux'
+import { signupUser } from '../store/actions/userAction'
 
 
 const Login = () => {
@@ -41,8 +42,7 @@ const Login = () => {
             // sign in
         } else {
             // register
-            
-
+            dispatch(signupUser(values))
         }
     }
 
