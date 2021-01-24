@@ -159,3 +159,231 @@ export const getUserStats = async (_id) => {
         console.log(err)
     }
 }
+
+
+
+
+
+export const getCategories = async (userData) => {
+    try {
+        const body = {
+            query:`
+                query{
+                    categories{
+                        _id
+                        name
+                    }
+                }
+            `
+        }
+        const { data } = await axios({ data:JSON.stringify(body) })
+        return data
+        
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+export const createPost = async(formData)=>{ 
+    try{
+        const body = {
+            query:`
+                mutation CreatePost($fields:PostInput!){
+                    createPost(fields:$fields){
+                        _id
+                        title
+                    }
+                }
+            `,
+            variables:{
+                fields:formData
+            }
+        }
+        const { data } = await axios({data:JSON.stringify(body)})
+        return {
+            createdPost:{
+                post: data.data ? data.data.createPost : null,
+                error: data.errors
+            }
+        }
+    } catch(err){
+        console.log(err)
+    }
+}
+
+
+export const getUserPosts = async (sort, prevState, _id) => { 
+    try{
+        const body = {
+            query:`
+                query GetUserPosts($sort:SortInput,$queryBy:QueryByInput){
+                    posts(sort:$sort, queryBy:$queryBy ){
+                        _id
+                        title
+                        status
+                        category { name }
+                    }
+                }
+            `,
+            variables:{
+                queryBy:{ key:"author", value:_id },
+                sort:sort
+            }
+        }
+        const {data} = await axios({ data:JSON.stringify(body) })
+        let newState
+        let newPosts = data.data ? data.data.posts : null
+        if(newPosts){
+            newState = [...prevState, ...newPosts]
+        }
+        return {
+            posts: data.data ? newState : null
+        }
+
+    } catch(err){
+        console.log(err)
+    }
+}
+
+
+export const updatePostStatus = async(status, _id, prevState)=>{ 
+    try{
+        const body = {
+            query:`
+                mutation UpdatePost($fields:PostInput!, $_id:ID!){
+                    updatePost(fields:$fields, _id:$_id){
+                        _id
+                        title
+                        status
+                        category { name }
+                    }
+                }
+            `,
+            variables:{
+                _id: _id,
+                fields: {status:status}
+            }
+        }
+        const { data } = await axios({data:JSON.stringify(body)});
+        let newState = null;
+        let updPost = data.data ? data.data.updatePost:null
+        if(updPost){
+            newState = prevState.map(oldObj => {
+                return [updPost].find( newObj => newObj._id === oldObj._id) || oldObj
+            });
+        }
+
+        return {
+            posts: newState ? newState : prevState
+        }
+    } catch(err){
+        console.log(err)
+    }
+}
+
+
+export const removePost = async(_id, prevState)=>{ 
+    try{
+        const body = {
+            query:`
+                mutation {
+                    deletePost(
+                        _id:"${_id}"
+                    ){
+                        _id
+                    }
+                }
+            `
+        }
+        const { data } = await axios({ data:JSON.stringify(body) })
+
+        let newState = null
+        let delPost = data.data ? data.data.deletePost : null
+        if(delPost){
+            newState = prevState.filter((obj)=> {
+                return obj._id !== delPost._id
+            })
+        }
+        return {
+            posts: newState ? newState : prevState
+        }
+    } catch(err){
+        console.log(err)
+    }
+}
+
+
+export const getPosts = async(sort, prevState)=>{ 
+
+    try{
+        const body = {
+            query:`
+                query GetPosts($sort:SortInput, $queryBy:QueryByInput){
+                    posts(sort:$sort, queryBy:$queryBy){
+                        _id
+                        title
+                        content
+                        excerpt
+                        category { name }
+                        author { 
+                            firstname 
+                            lastname
+                        }
+                    }
+                }
+            `,
+            variables:{
+                queryBy:{ key:"status", value:"PUBLIC" },
+                sort:sort
+            }
+        }
+        const {data} = await axios({ data:JSON.stringify(body) })
+
+        let newState
+        let newPosts = data.data ? data.data.posts : null
+        if(newPosts){
+            newState = [...prevState,...newPosts]
+        }
+        return {
+            homePosts: data.data ? newState : null
+        }
+    } catch(err){
+        console.log(err)
+    }
+}
+
+
+export const getPost = async(_id)=>{ 
+
+    try{
+        const body = {
+            query:`
+                query{
+                    post(id:"${_id}" ){
+                        title
+                        content
+                        author { firstname, lastname }
+                        category { _id, name }
+                        related(sort:{ limit:4 }){
+                            _id
+                            title
+                            excerpt
+                            author { firstname, lastname }
+                            category { _id, name }
+                        }
+                    }
+                }
+            `
+        };
+        const {data} = await axios({ data:JSON.stringify(body) })
+        return {
+            singlePost:{
+                post: data.data ? data.data.post  : null,
+                error: data.errors
+            }
+        }
+    } catch(err){
+        console.log(err)
+    }
+}

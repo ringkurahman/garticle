@@ -9,8 +9,8 @@ import {Form, Button, Alert} from 'react-bootstrap'
 import ToastHandler from '../components/utils/toasts'
 
 import { useDispatch } from 'react-redux'
-import { getCategories } from '../store/api/postsApi'
-import { createPost, clearCreatedPost } from '../store/actions/postsAction'
+import { getCategories } from '../store/api/userApi'
+import { createPost, clearCreatedPost } from '../store/actions/userAction'
 
 
 const CreateArticle = () => {

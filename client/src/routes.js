@@ -15,6 +15,7 @@ import UserArea from './views/User'
 import Profile from './views/Profile'
 import Articles from './views/Articles'
 import CreateArticle from './views/CreateArticle'
+import SingleArticle from './views/SingleArticle'
 
 
 class Routes extends Component {
@@ -28,7 +29,8 @@ class Routes extends Component {
                 <Container className='mt-4'>
                     <Switch>
                         <Route path='/user-area/create-article' component={ Protect(CreateArticle) } />
-                        <Route path='/user-area/articles' component={ Protect(Articles) } />
+                        <Route path='/user-area/articles' component={Protect(Articles)} />
+                        <Route path='/article/:id' component={ Protect(SingleArticle) } />
                         <Route path='/user-area/profile' component={ Protect(Profile) } />
                         <Route path='/user-area' component={ Protect(UserArea) } />
                         <Route path='/sign-in' component={ Login } />

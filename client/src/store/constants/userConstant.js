@@ -1,5 +1,14 @@
-export const AUTH_USER = 'AUTH_USER'
+
+export const GET_CATEGORIES = 'GET_CATEGORIES'
+
+export const CREATE_POST = 'CREATE_POST'
+export const USER_POSTS = 'USER_POST'
+export const UPDATE_POST = 'UPDATE_POST'
+export const GET_POSTS = 'GET_POSTS'
+export const GET_POST = 'GET_POST'
+
 export const USER_STATS = 'USER_STATS'
+export const AUTH_USER = 'AUTH_USER'
 
 export const USER_LOGIN_FAIL = 'USER_LOGIN_FAIL'
 export const USER_LOGOUT = 'USER_LOGOUT'
