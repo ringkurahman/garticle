@@ -1,13 +1,16 @@
 //rsc
 import React from 'react'
 import UserAreaHOC from '../components/UserAreaHOC'
+import UpdateEmailPass from '../components/profileComponents/UpdateEmailPass'
+import UserStats from '../components/profileComponents/UserStats'
 
 
-const Profile = () => {
+const Profile = (props) => {
     return (
         <UserAreaHOC>
             <div className="mt-3">
-                Welcome to your profile area
+                <UpdateEmailPass {...props} />
+                <UserStats {...props} />
             </div>
         </UserAreaHOC>
     )

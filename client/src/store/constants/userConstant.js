@@ -1,5 +1,6 @@
 export const AUTH_USER = 'AUTH_USER'
-export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS'
+export const USER_STATS = 'USER_STATS'
+
 export const USER_LOGIN_FAIL = 'USER_LOGIN_FAIL'
 export const USER_LOGOUT = 'USER_LOGOUT'
 

@@ -95,3 +95,67 @@ export const autoSign = async()=>{
         console.log(err)
     }
 }
+
+
+export const updateUserEmailPass = async (email, password, _id) => {
+    try{
+        const { data } = await axios({data:{
+            query:`mutation{
+                updateUserEmailPass(
+                    email: "${email}"
+                    password: "${password}"
+                    _id: "${_id}"
+                ){
+                    _id
+                    token
+                    email
+                }
+            }`
+        }})
+
+        if(data.errors){
+            return { errors: data.errors }
+        } else {
+            localStorage.setItem('X-AUTH', data.data.updateUserEmailPass.token)
+        }
+        return  {
+            auth: data.data ? data.data.updateUserEmailPass : null
+        }
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+export const getUserStats = async (_id) => {
+    try{
+        const body = {
+            query:`
+                query User($id:ID!, $sort:SortInput){
+                    user(id:$id){
+                        firstname
+                        lastname
+                        email
+                        role
+                        posts(sort:$sort) { _id, title, excerpt }
+                        categories { _id, name }
+                    }
+                }
+            `,
+            variables:{
+                id: _id,
+                sort: { sortBy: "_id", order: "desc",limit: 3 }
+            }
+        }
+
+        const { data } = await axios({ data: JSON.stringify(body) })
+        
+        return {
+            stats: data.data ? data.data.user :null
+        }
+
+    } catch (err) {
+        console.log(err)
+    }
+}

@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify'
 
 import AutoSignIn from './components/AutoSignIn'
 import Protect from './components/ProtectHOC'
-import CheckLogin from './components/LoginHOC'
+// import CheckLogin from './components/LoginHOC'
 
 import Header from './components/Header'
 import Home from './views/Home'
@@ -31,7 +31,7 @@ class Routes extends Component {
                         <Route path='/user-area/articles' component={ Protect(Articles) } />
                         <Route path='/user-area/profile' component={ Protect(Profile) } />
                         <Route path='/user-area' component={ Protect(UserArea) } />
-                        <Route path='/sign-in' component={ CheckLogin(Login) } />
+                        <Route path='/sign-in' component={ Login } />
                         <Route path='/' component={ Home } />
                     </Switch>
                 </Container>
